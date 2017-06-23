@@ -1,10 +1,12 @@
 package io.hipteam.testutil;
 
 import android.graphics.Rect;
+import android.support.annotation.IdRes;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.PerformException;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.assertion.ViewAssertions;
+import android.support.test.espresso.contrib.NavigationViewActions;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -28,6 +30,10 @@ import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.action.ViewActions.swipeRight;
 import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.contrib.DrawerActions.close;
+import static android.support.test.espresso.contrib.DrawerActions.open;
+import static android.support.test.espresso.contrib.DrawerMatchers.isClosed;
+import static android.support.test.espresso.contrib.DrawerMatchers.isOpen;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -46,7 +52,10 @@ import static org.hamcrest.Matchers.is;
 
 /**
  * Created by richardradics on 08/03/16.
+ * Extended by hipteam
  */
+
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class BaseTest {
     public Solo solo;
 
@@ -188,6 +197,26 @@ public class BaseTest {
         typeTextOnViewGroupChildAt(listViewId, position, inputId, text);
     }
 
+    /* NAVIGATION DRAWER */
+
+    public void openNavigationDrawer(@IdRes int nawDrawerId, int gravity) {
+        onView(withId(nawDrawerId))
+                .check(matches(isClosed(gravity))) // Left Drawer should be closed.
+                .perform(open());
+    }
+
+    public void closeNavigationDrawer(@IdRes int nawDrawerId, int gravity) {
+        onView(withId(nawDrawerId))
+                .check(matches(isOpen(gravity))) // Left Drawer should be open.
+                .perform(close());
+    }
+
+    public void navDrawerNavigateTo(@IdRes int navigationViewId, @IdRes int menuItemId) {
+        onView(withId(navigationViewId))
+                .perform(NavigationViewActions.navigateTo(menuItemId));
+    }
+
+
     @After
     public void tearDown() throws Exception {
         try {
@@ -201,7 +230,7 @@ public class BaseTest {
     private void scrollToView(int resourceId) {
         try {
             onView(withId(resourceId)).perform(ViewActions.scrollTo()).check(ViewAssertions.matches(isDisplayed()));
-        } catch (PerformException e) {
+        } catch (PerformException ignore) {
         }
     }
 }
