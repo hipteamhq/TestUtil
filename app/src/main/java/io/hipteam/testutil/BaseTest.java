@@ -16,6 +16,7 @@ import android.widget.ImageButton;
 import com.jraska.falcon.FalconSpoon;
 import com.robotium.solo.Solo;
 
+import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
 
@@ -39,6 +40,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withTagValue;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static io.hipteam.testutil.EspressoTestHelper.clickOnViewGroupChildAt;
 import static io.hipteam.testutil.EspressoTestHelper.getCurrentActivity;
@@ -176,6 +178,10 @@ public class BaseTest {
 
     public void checkViewWithText(int resourceId, String text) {
         onView(withId(resourceId)).check(ViewAssertions.matches(withText(text)));
+    }
+
+    public void clickOnViewByTag(String tag) {
+        onView(withTagValue(Matchers.<Object>is(tag))).perform(click());
     }
 
     public void clickOnListAtPosition(int listViewId, int position) {
